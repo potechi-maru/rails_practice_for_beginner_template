@@ -1,7 +1,26 @@
 class QuestionsController < ApplicationController
-  def index
+  
+  before_action :search
+  
+  def search
     @q = Question.ransack(params[:q])
+    # No Ransack::Search object was provided to search_form_for!という
+    # ArgumentErrorが出るので分けてbefore_actionに指定
+  end
+    
+  
+  def index
     @questions = @q.result(distinct: true)
+  end
+  
+  def solved
+    @questions = Question.where(solved: true)
+    render :index
+  end
+  
+  def unsolved
+    @questions = Question.where(solved: false)
+    render :index
   end
   
   def show
@@ -46,6 +65,12 @@ class QuestionsController < ApplicationController
     @question = current_user.questions.find(params[:id])
     @question.destroy!
     redirect_to questions_path
+  end
+  
+  def solve 
+    @question = current_user.questions.find(params[:id])
+    @question.update!(solved: true)
+    redirect_to question_path(@question), success: '解決済みにしました'
   end
   
   private
