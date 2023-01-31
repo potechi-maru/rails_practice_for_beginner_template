@@ -1,25 +1,19 @@
 class QuestionsController < ApplicationController
   
-  before_action :search
-  
-  def search
-    @q = Question.ransack(params[:q])
-    # No Ransack::Search object was provided to search_form_for!という
-    # ArgumentErrorが出るので分けてbefore_actionに指定
-  end
-    
-  
   def index
+    @q = Question.ransack(params[:q])
     @questions = @q.result(distinct: true)
   end
   
   def solved
-    @questions = Question.where(solved: true)
+    @q = Question.where(solved: true).ransack(params[:q])
+    @questions = @q.result(distinct: true)
     render :index
   end
   
   def unsolved
-    @questions = Question.where(solved: false)
+    @q = Question.where(solved: false).ransack(params[:q])
+    @questions = @q.result(distinct: true)
     render :index
   end
   
