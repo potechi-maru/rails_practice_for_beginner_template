@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :answer do
-    body { "MyText" }
-    user { nil }
-    question { nil }
+    user
+    question
+    body { Faker::Lorem.sentence(word_count: 30) }
   end
 end
