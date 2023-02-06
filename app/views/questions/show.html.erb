@@ -1,0 +1,30 @@
+<p>タイトル：<%= @question.title %></p>
+<p>質問内容：<%= @question.body %></p>
+<p>質問者：<%= @question.user.name %></p>
+
+<% if @question.solved? %>
+  解決済み
+<% else %>
+  <% if @question.user_id == current_user.id %>
+    <%= link_to '解決済みにする', solve_question_path(@question), method: :post %>
+  <% end %>
+<% end %>
+
+<h2>回答</h2>
+<%= form_with model: [@question, Answer.new] do |f| %>
+  <%= f.text_area :body %>
+  <%= f.submit %>
+<% end %>
+
+<h2>回答一覧</h2>
+<ul>
+  <% @question.answers.each do |answer| %>
+    <li>
+      <%= answer.body %>
+      <% if answer.user_id == current_user.id %>
+        <%= link_to '削除', question_answer_path(@question, answer),
+            method: :delete, data: { confirm: '削除しますか' } %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
