@@ -2,18 +2,18 @@ class QuestionsController < ApplicationController
   
   def index
     @q = Question.ransack(params[:q])
-    @questions = @q.result(distinct: true).page(params[:page]).per(5)
+    @questions = @q.result(distinct: true).order(created_at: :desc).page(params[:page]).per(5)
   end
   
   def solved
     @q = Question.where(solved: true).ransack(params[:q])
-    @questions = @q.result(distinct: true)
+    @questions = @q.result(distinct: true).order(created_at: :desc).page(params[:page]).per(5)
     render :index
   end
   
   def unsolved
     @q = Question.where(solved: false).ransack(params[:q])
-    @questions = @q.result(distinct: true)
+    @questions = @q.result(distinct: true).order(created_at: :desc).page(params[:page]).per(5)
     render :index
   end
   
@@ -58,7 +58,7 @@ class QuestionsController < ApplicationController
   def destroy
     @question = current_user.questions.find(params[:id])
     @question.destroy!
-    redirect_to questions_path
+    redirect_to questions_path, success: '質問を削除しました'
   end
   
   def solve 

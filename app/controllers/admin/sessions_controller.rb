@@ -8,7 +8,6 @@ class Admin::SessionsController < Admin::BaseController
   
   def create
     user = User.find_by(email: params[:email])
-    # そもそもこの時点でuserはnil
     if user&.authenticate(params[:password])
       session[:user_id] = user.id
       redirect_to admin_questions_path, notice: 'login now!'

@@ -11,15 +11,12 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      redirect_to users_path, notice: "Welcome, #{@user.name}"
+      redirect_to questions_path, success: 'サインアップが完了しました'
     else
+      flash.now[:danger] = 'サインアップに失敗しました'
       render :new
     end
   end
-  
-  # def show
-    # @user = User.find_by(email: params[:email])
-  # end
   
   private
   
